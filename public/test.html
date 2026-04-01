@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>API Test</h2>
+    <div id="result">Testing...</div>
+    <script>
+        fetch('/events')
+            .then(res => {
+                console.log('Status:', res.status);
+                return res.text();  // Get raw text first
+            })
+            .then(text => {
+                console.log('Raw response:', text);
+                try {
+                    const data = JSON.parse(text);
+                    document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                } catch(e) {
+                    document.getElementById('result').innerHTML = 'JSON Parse Error: ' + e.message + '<br>Raw: ' + text;
+                }
+            })
+            .catch(err => {
+                document.getElementById('result').innerHTML = 'Fetch Error: ' + err.message;
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<nav class="navbar">
+    <div class="nav-logo">
+        <span>Campus Connect</span>
+
+    </div>
+    
+    <div class="hamburger" id="hamburgerBtn">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+    
+    <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html">🏠 Events</a></li>
+        <li><a href="my-events.html">📋 My Events</a></li>
+        <span id="adminLink" style="display:none;">
+            <li><a href="admin.html">👑 Admin</a></li>
+        </span>
+        <li><a href="login.html" id="loginNavBtn">🔐 Login</a></li>
+        <li><button id="logoutBtn" style="display:none;">🚪 Logout</button></li>
+    </ul>
+</nav>
+
+<style>
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #0a0a0f;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+}
+
+.nav-logo .plus {
+    color: #ff4d6d;
+}
+
+.nav-logo .badge {
+    font-size: 10px;
+    background: linear-gradient(135deg, #7c3aed, #ff4d6d);
+    padding: 2px 6px;
+    border-radius: 12px;
+    margin-left: 5px;
+}
+
+.hamburger {
+    display: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 10px;
+}
+
+.bar {
+    width: 28px;
+    height: 3px;
+    background-color: white;
+    margin: 5px 0;
+    transition: 0.3s;
+    border-radius: 3px;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu li a, .nav-menu li button {
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.nav-menu li a:hover, .nav-menu li button:hover {
+    color: white;
+    background: rgba(255,255,255,0.1);
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: block !important;
+    }
+    
+    .nav-menu {
+        position: fixed;
+        top: 60px;
+        left: -280px;
+        width: 260px;
+        height: calc(100vh - 60px);
+        background: #12121a;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+        gap: 10px;
+        transition: left 0.3s ease;
+        z-index: 99;
+    }
+    
+    .nav-menu.active {
+        left: 0;
+    }
+    
+    .nav-menu li {
+        width: 100%;
+    }
+    
+    .nav-menu li a, .nav-menu li button {
+        display: block;
+        width: 100%;
+        padding: 12px 15px;
+        font-size: 16px;
+        text-align: left;
+    }
+    
+    .hamburger.active .bar:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    
+    .hamburger.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .hamburger.active .bar:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+    }
+}
+</style>
+
+<script>
+const hamburger = document.getElementById('hamburgerBtn');
+const menu = document.getElementById('navMenu');
+
+if (hamburger && menu) {
+    hamburger.onclick = function() {
+        menu.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    };
+}
+
+// Close menu when clicking a link
+document.querySelectorAll('.nav-menu a, .nav-menu button').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            menu.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+    });
+});
+
+// User login/logout
+const user = JSON.parse(localStorage.getItem("user") || "null");
+if (user) {
+    const loginBtn = document.getElementById('loginNavBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const adminLink = document.getElementById('adminLink');
+    
+    if (loginBtn) loginBtn.style.display = 'none';
+    if (logoutBtn) logoutBtn.style.display = 'block';
+    if (user.role === 'admin' && adminLink) {
+        adminLink.style.display = 'inline';
+    }
+}
+
+const logoutBtnElem = document.getElementById('logoutBtn');
+if (logoutBtnElem) {
+    logoutBtnElem.onclick = function() {
+        localStorage.removeItem('user');
+        window.location.href = 'login.html';
+    };
+}
+</script>

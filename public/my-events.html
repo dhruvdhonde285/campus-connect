@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Events - Campus+Connect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --surface2: #1a1a26;
+            --border: rgba(255,255,255,0.07);
+            --accent: #ff4d6d;
+            --accent2: #7c3aed;
+            --accent3: #06b6d4;
+            --gold: #f59e0b;
+            --text: #f1f1f1;
+            --muted: #6b7280;
+            --green: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            animation: pageFadeIn 0.8s ease-out;
+        }
+
+        @keyframes pageFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80vw 60vh at 10% 20%, rgba(124,58,237,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 60vw 50vh at 90% 80%, rgba(255,77,109,0.1) 0%, transparent 55%),
+                radial-gradient(ellipse 50vw 40vh at 50% 50%, rgba(6,182,212,0.06) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Navbar Styles - Matching index.html */
+        #navbar-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(10,10,15,0.85);
+            border-bottom: 1px solid var(--border);
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-logo .plus {
+            color: var(--accent);
+        }
+
+        .nav-logo .badge {
+            font-size: 11px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--accent2), var(--accent));
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-family: 'DM Sans', sans-serif;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a, #logoutBtn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .nav-links a:hover, #logoutBtn:hover {
+            color: var(--text);
+            background: rgba(255,255,255,0.06);
+        }
+
+        .main {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 32px 80px;
+        }
+
+        .header {
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            animation: fadeInLeft 0.8s ease;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent3), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .header i {
+            font-size: 48px;
+            color: var(--accent3);
+            animation: bounce 2s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .section-title span {
+            animation: glow 2s ease infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 5px rgba(16,185,129,0.3); }
+            50% { text-shadow: 0 0 15px rgba(16,185,129,0.6); }
+        }
+
+        .event-count {
+            font-size: 13px;
+            color: var(--muted);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .event-count:hover {
+            border-color: var(--green);
+            transform: scale(1.05);
+        }
+
+        #myEvents {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .event-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            animation: fadeInUp 0.6s ease both;
+        }
+
+        .event-card:nth-child(n) { animation-delay: calc(0.05s * var(--i, 0)); }
+
+        .event-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: var(--green);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.35);
+        }
+
+        .event-card-accent {
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent3), var(--green));
+            transition: height 0.3s ease;
+        }
+
+        .event-card:hover .event-card-accent {
+            height: 6px;
+        }
+
+        .event-card-body {
+            padding: 24px;
+        }
+
+        .event-type-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            background: rgba(16,185,129,0.12);
+            border: 1px solid rgba(16,185,129,0.2);
+            color: var(--green);
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover .event-type-badge {
+            background: rgba(16,185,129,0.2);
+            transform: scale(1.05);
+        }
+
+        .event-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .event-card:hover .event-title {
+            color: var(--green);
+        }
+
+        .event-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .event-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--muted);
+            transition: transform 0.3s ease;
+        }
+
+        .event-card:hover .event-meta-row {
+            transform: translateX(3px);
+        }
+
+        .event-meta-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            background: var(--surface2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover .event-meta-icon {
+            background: var(--green);
+            color: #0a0a0f;
+        }
+
+        .event-description {
+            font-size: 13px;
+            color: rgba(240,240,248,0.55);
+            line-height: 1.6;
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-bottom: 20px;
+        }
+
+        .registered-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.2);
+            color: var(--green);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover .registered-badge {
+            background: rgba(16,185,129,0.2);
+            transform: scale(1.05);
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 40px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .empty-icon {
+            font-size: 56px;
+            margin-bottom: 16px;
+            display: block;
+            color: var(--muted);
+            animation: bounce 2s ease infinite;
+        }
+
+        .empty-state h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .btn-browse {
+            background: linear-gradient(135deg, var(--accent3), var(--green));
+            color: #0a0a0f;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-browse::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-browse:active::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .btn-browse:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(6,182,212,0.4);
+        }
+
+        .loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px;
+            color: var(--muted);
+        }
+
+        .loading i {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: var(--accent3);
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .main { padding: 20px; }
+            .header h1 { font-size: 32px; }
+            #myEvents { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-wrapper">
+        <div id="navbar"></div>
+    </div>
+
+    <main class="main">
+        <div class="header">
+            <i class="fas fa-calendar-check"></i>
+            <h1>My Registered Events</h1>
+        </div>
+
+        <div class="section-header">
+            <h2 class="section-title">Your <span style="color: var(--green);">Events</span></h2>
+            <span class="event-count" id="eventsCountBadge">Loading…</span>
+        </div>
+
+        <div id="myEvents">
+            <div class="loading">
+                <i class="fas fa-spinner"></i>
+                <p>Loading your registered events...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    // API Base URL
+    const API_BASE = 'https://w9r4g7e58a.execute-api.ap-south-1.amazonaws.com/prod';
+    
+    let currentUser = null;
+
+    try {
+        currentUser = JSON.parse(localStorage.getItem('user') || 'null');
+        console.log('Current user:', currentUser);
+    } catch (e) {
+        console.error('Error parsing user:', e);
+    }
+
+    // Redirect if not logged in
+    if (!currentUser) {
+        alert('Please login first');
+        window.location.href = 'login.html';
+    }
+
+    // Load navbar
+    fetch('navbar.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('navbar').innerHTML = data;
+            
+            // Update navbar based on user login status
+            if (currentUser) {
+                const loginBtn = document.getElementById('loginNavBtn');
+                const logoutBtn = document.getElementById('logoutBtn');
+                
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                
+                // Add logout handler
+                const logoutBtnElem = document.getElementById('logoutBtn');
+                if (logoutBtnElem) {
+                    logoutBtnElem.onclick = function() {
+                        localStorage.removeItem('user');
+                        window.location.href = 'login.html';
+                    };
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error loading navbar:', error);
+        });
+
+    function formatDate(dateString) {
+        if (!dateString) return 'TBD';
+        try {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        } catch {
+            return dateString;
+        }
+    }
+
+    function formatTime(timeStr) {
+        if (!timeStr) return '';
+        try {
+            const [h, m] = timeStr.split(':');
+            const hour = parseInt(h);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour % 12 || 12;
+            return `${hour12}:${m} ${ampm}`;
+        } catch {
+            return timeStr;
+        }
+    }
+
+    function escapeHtml(text) {
+        if (!text) return text;
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Load user's registered events
+    function loadMyEvents() {
+        const container = document.getElementById('myEvents');
+        const countBadge = document.getElementById('eventsCountBadge');
+
+        if (!currentUser) return;
+
+        fetch(`${API_BASE}/my-events/${currentUser.id}`)
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to load');
+                return res.json();
+            })
+            .then(events => {
+                console.log('Registered events:', events);
+
+                if (countBadge) {
+                    countBadge.textContent = `${events.length} registered`;
+                }
+
+                if (!events || events.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="empty-icon">📭</span>
+                            <h3>No Registered Events</h3>
+                            <p>You haven't registered for any events yet.</p>
+                            <a href="index.html" class="btn-browse">
+                                <i class="fas fa-compass"></i> Browse Events
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = '';
+                events.forEach((event, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'event-card';
+                    card.style.animation = `fadeSlideUp 0.5s ease ${idx * 0.1}s both`;
+
+                    card.innerHTML = `
+                        <div class="event-card-accent"></div>
+                        <div class="event-card-body">
+                            <div class="event-type-badge">
+                                <i class="fas fa-check-circle"></i> Registered
+                            </div>
+                            <div class="event-title">${escapeHtml(event.title) || 'Untitled'}</div>
+                            <div class="event-meta">
+                                <div class="event-meta-row">
+                                    <div class="event-meta-icon">📍</div>
+                                    <span>${escapeHtml(event.location) || 'TBD'}</span>
+                                </div>
+                                <div class="event-meta-row">
+                                    <div class="event-meta-icon">📅</div>
+                                    <span>${formatDate(event.event_date)}</span>
+                                </div>
+                                <div class="event-meta-row">
+                                    <div class="event-meta-icon">⏰</div>
+                                    <span>${formatTime(event.event_time)}</span>
+                                </div>
+                            </div>
+                            <div class="event-description">
+                                ${escapeHtml(event.description) || 'No description provided.'}
+                            </div>
+                            <div style="display: flex; justify-content: flex-end;">
+                                <span class="registered-badge">
+                                    <i class="fas fa-check-circle"></i> Registered
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading events:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <span class="empty-icon">❌</span>
+                        <h3>Error Loading Events</h3>
+                        <p>Please try again later.</p>
+                        <button onclick="loadMyEvents()" class="btn-browse">
+                            <i class="fas fa-sync-alt"></i> Retry
+                        </button>
+                    </div>
+                `;
+            });
+    }
+
+    // Load events when page loads
+    document.addEventListener('DOMContentLoaded', loadMyEvents);
+    </script>
+</body>
+</html>
