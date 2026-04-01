@@ -1,0 +1,87 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: |
+          cd backend
+          npm install
+      
+      - name: Create deployment folder on EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            mkdir -p ~/campusconnect-deploy
+      
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "backend/,public/,package.json"
+          target: "~/campusconnect-deploy/"
+          strip_components: 0
+      
+      - name: Deploy and restart application
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Copy to final location
+            rm -rf ~/campusconnect-backup
+            cp -r ~/campusconnect ~/campusconnect-backup 2>/dev/null || true
+            rm -rf ~/campusconnect
+            mkdir -p ~/campusconnect
+            cp -r ~/campusconnect-deploy/* ~/campusconnect/
+            
+            # Install dependencies and restart
+            cd ~/campusconnect/backend
+            npm install --production
+            
+            # Create .env file (if not exists)
+            if [ ! -f .env ]; then
+              echo "DB_HOST=localhost" > .env
+              echo "DB_USER=root" >> .env
+              echo "DB_PASSWORD=admin123" >> .env
+              echo "DB_NAME=campusconnect" >> .env
+              echo "PORT=3000" >> .env
+            fi
+            
+            # Restart PM2
+            pm2 restart campusconnect || pm2 start server.js --name campusconnect
+            pm2 save
+            
+            # Restart Nginx
+            sudo systemctl restart nginx
+            
+            echo "✅ Deployment completed at $(date)"
+      
+      - name: Health check
+        run: |
+          sleep 5
+          curl -f http://${{ secrets.EC2_HOST }}:3000/events || exit 1
+          echo "✅ Health check passed!"
